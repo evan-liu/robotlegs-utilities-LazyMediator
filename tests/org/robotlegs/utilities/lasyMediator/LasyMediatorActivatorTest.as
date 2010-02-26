@@ -55,8 +55,6 @@ package org.robotlegs.utilities.lasyMediator
         [Test(async)]
         public function trigger_event_added_after_removed_if_not_oneshot():void
         {
-            view = new Sprite();
-            instance = new LasyMediatorActivator(view, false);
             UIImpersonator.addChild(view);
             UIImpersonator.removeChild(view);
             Async.proceedOnEvent(this, UIImpersonator.stage, LasyMediatorEvent.VIEW_ADDED);
@@ -65,6 +63,8 @@ package org.robotlegs.utilities.lasyMediator
         [Test(async)]
         public function not_trigger_event_added_after_removed_if_oneshot():void
         {
+            view = new Sprite();
+            instance = new LasyMediatorActivator(view, true);
             UIImpersonator.addChild(view);
             UIImpersonator.removeChild(view);
             Async.failOnEvent(this, UIImpersonator.stage, LasyMediatorEvent.VIEW_ADDED);
