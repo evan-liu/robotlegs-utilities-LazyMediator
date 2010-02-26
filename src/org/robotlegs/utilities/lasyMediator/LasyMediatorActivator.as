@@ -15,7 +15,7 @@ package org.robotlegs.utilities.lasyMediator
          * @param view      View target.
          * @param oneShot   If stop when the view is removed from stage.
          */
-        public function LasyMediatorActivator(view:DisplayObject, oneShot:Boolean = true)
+        public function LasyMediatorActivator(view:DisplayObject, oneShot:Boolean = false)
         {
             this.view = view;
             this.oneShot = oneShot;
