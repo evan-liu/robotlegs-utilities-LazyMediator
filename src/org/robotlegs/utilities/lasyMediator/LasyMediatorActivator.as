@@ -5,17 +5,20 @@ package org.robotlegs.utilities.lasyMediator
     /**
      * @author eidiot
      */
-    public class MediatorActivator
+    public class LasyMediatorActivator
     {
         //======================================================================
         //  Constructor
         //======================================================================
         /**
-         * Construct a <code>MediatorActivator</code>.
+         * Construct a <code>LasyMediatorActivator</code>.
+         * @param view      View target.
+         * @param oneShot   If stop when the view is removed from stage.
          */
-        public function MediatorActivator(view:DisplayObject)
+        public function LasyMediatorActivator(view:DisplayObject, oneShot:Boolean = true)
         {
             this.view = view;
+            this.oneShot = oneShot;
             if (view.stage)
             {
                 triggerActivateMediatorEvent();
@@ -29,13 +32,22 @@ package org.robotlegs.utilities.lasyMediator
         //  Variables
         //======================================================================
         private var view:DisplayObject;
+        private var oneShot:Boolean;
         //======================================================================
         //  Private methods
         //======================================================================
         private function triggerActivateMediatorEvent():void
         {
-            view.stage.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_ADDED, view));
+            view.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_ADDED, view));
             view.addEventListener(Event.REMOVED_FROM_STAGE, view_removedFromStageHandler);
+        }
+        private function triggerDeactivateMediatorEvent():void
+        {
+            view.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_REMOVED, view));
+            if (!oneShot)
+            {
+                view.addEventListener(Event.ADDED_TO_STAGE, view_addedToStageHandler);
+            }
         }
         //======================================================================
         //  Event handlers
@@ -48,7 +60,7 @@ package org.robotlegs.utilities.lasyMediator
         private function view_removedFromStageHandler(event:Event):void
         {
             view.removeEventListener(Event.REMOVED_FROM_STAGE, view_removedFromStageHandler);
-            view.stage.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_REMOVED, view));
+            triggerDeactivateMediatorEvent();
         }
     }
 }

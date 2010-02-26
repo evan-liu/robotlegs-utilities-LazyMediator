@@ -1,19 +1,23 @@
 package
 {
-    import asunit4.ui.MinimalRunnerUI;
-
     import support.UIImpersonator;
 
+    import org.flexunit.internals.TraceListener;
+    import org.flexunit.runner.FlexUnitCore;
     import org.robotlegs.utilities.lasyMediator.AllTests;
+
+    import flash.display.Sprite;
     /**
      * @author eidiot
      */
-    public class LazyMediatorTestRunner extends MinimalRunnerUI
+    public class LazyMediatorTestRunner extends Sprite
     {
         public function LazyMediatorTestRunner()
         {
             UIImpersonator.initialize(stage);
-            run(AllTests);
+            var flexunit:FlexUnitCore = new FlexUnitCore();
+            flexunit.addListener(new TraceListener());
+            flexunit.run(AllTests);
         }
     }
 }

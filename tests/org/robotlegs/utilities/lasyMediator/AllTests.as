@@ -1,10 +1,13 @@
 package org.robotlegs.utilities.lasyMediator
 {
+    [Suite]
+    [RunWith("org.flexunit.runners.Suite")]
     /**
      * @author eidiot
      */
     public class AllTests
     {
-        public var mediatorActivatorTest:MediatorActivatorTest;
+        public var lasyMediatorActivatorTest:LasyMediatorActivatorTest;
+        public var lasyMediatorMapTest:LasyMediatorMapTest;
     }
 }
