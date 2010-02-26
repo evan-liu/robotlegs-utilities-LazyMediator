@@ -16,20 +16,34 @@ package org.robotlegs.utilities.lasyMediator
         public function MediatorActivator(view:DisplayObject)
         {
             this.view = view;
-            view.addEventListener(Event.ADDED_TO_STAGE, view_addedToStageHandler);
+            if (view.stage)
+            {
+                triggerActivateMediatorEvent();
+            }
+            else
+            {
+                view.addEventListener(Event.ADDED_TO_STAGE, view_addedToStageHandler);
+            }
         }
         //======================================================================
         //  Variables
         //======================================================================
         private var view:DisplayObject;
         //======================================================================
+        //  Private methods
+        //======================================================================
+        private function triggerActivateMediatorEvent():void
+        {
+            view.stage.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_ADDED, view));
+            view.addEventListener(Event.REMOVED_FROM_STAGE, view_removedFromStageHandler);
+        }
+        //======================================================================
         //  Event handlers
         //======================================================================
         private function view_addedToStageHandler(event:Event):void
         {
             view.removeEventListener(Event.ADDED_TO_STAGE, view_addedToStageHandler);
-            view.stage.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_ADDED, view));
-            view.addEventListener(Event.REMOVED_FROM_STAGE, view_removedFromStageHandler);
+            triggerActivateMediatorEvent();
         }
         private function view_removedFromStageHandler(event:Event):void
         {

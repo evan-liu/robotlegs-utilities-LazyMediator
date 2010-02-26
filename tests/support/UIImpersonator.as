@@ -47,7 +47,7 @@ package support
         }
         public static function getChildIndex(child:DisplayObject):int
         {
-            return _stage ? _stage.getChildIndex(child) : null;
+            return _stage ? _stage.getChildIndex(child) : -1;
         }
         public static function get numChildren():int
         {

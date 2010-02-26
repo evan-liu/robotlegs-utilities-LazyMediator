@@ -35,6 +35,13 @@ package org.robotlegs.utilities.lasyMediator
             view = null;
         }
         [Test(async)]
+        public function test_trigger_event_in_constructor_for_already_on_stage_view():void
+        {
+            UIImpersonator.addChild(view);
+            Async.proceedOnEvent(this, UIImpersonator.stage, LasyMediatorEvent.VIEW_ADDED);
+            instance = new MediatorActivator(view);
+        }
+        [Test(async)]
         public function test_add_view_to_stage_trigger_event():void
         {
             Async.proceedOnEvent(this, UIImpersonator.stage, LasyMediatorEvent.VIEW_ADDED);
