@@ -24,15 +24,20 @@ package org.robotlegs.utilities.lasyMediator
         public function LasyMediatorMap(contextView:DisplayObjectContainer, injector:IInjector)
         {
             super(contextView, injector);
-            kepper = new LasyMediatorObserver(contextView, this);
+            observer = new LasyMediatorObserver(contextView, this);
         }
         //======================================================================
         //  Variables
         //======================================================================
-        private var kepper:LasyMediatorObserver;
-        private var mappingDataByViewClass:Dictionary = new Dictionary(true);
-        private var mediatorsMarkedForRemoval:Dictionary = new Dictionary();
-        private var hasMediatorsMarkedForRemoval:Boolean = false;
+        //-- Observer --//
+        protected var observer:LasyMediatorObserver;
+        //-- Maps --//
+        protected var mappingConfigByViewClass:Dictionary = new Dictionary(false);
+        protected var mappingConfigByView:Dictionary = new Dictionary(true);
+        protected var mediatorByView:Dictionary = new Dictionary(true);
+        //-- Remnoval --//
+        protected var mediatorsMarkedForRemoval:Dictionary = new Dictionary();
+        protected var hasMediatorsMarkedForRemoval:Boolean = false;
         //======================================================================
         //  Overridden properties: ViewMapBase
         //======================================================================
@@ -41,7 +46,7 @@ package org.robotlegs.utilities.lasyMediator
             if (value != _enabled)
             {
                 _enabled = value;
-                kepper.enabled = value;
+                observer.enabled = value;
             }
         }
         //======================================================================
@@ -57,12 +62,12 @@ package org.robotlegs.utilities.lasyMediator
                 throw new ContextError("Only view class can be used in LasyMediatorMap.");
             }
             // TODO Check if the mediatorClass is classExtendsOrImplements IMediator
-            var data:MappingData = new MappingData();
+            var data:MappingConfig = new MappingConfig();
             data.mediatorClass = mediatorClass;
             data.autoCreate = autoCreate;
             data.autoRemove = autoRemove;
             data.typedViewClass = injectViewAs ? injectViewAs : viewClassOrName;
-            mappingDataByViewClass[viewClassOrName] = data;
+            mappingConfigByViewClass[viewClassOrName] = data;
             // TODO Fix (_contextView is viewClassOrName) to a better way
             if (autoCreate && _contextView && (_contextView is viewClassOrName))
             {
@@ -79,7 +84,7 @@ package org.robotlegs.utilities.lasyMediator
             {
                 throw new ContextError("Only view class can be used in LasyMediatorMap.");
             }
-            delete mappingDataByViewClass[viewClassOrName];
+            delete mappingConfigByViewClass[viewClassOrName];
         }
         /**
          * @inheritDoc
@@ -90,18 +95,17 @@ package org.robotlegs.utilities.lasyMediator
             {
                 return null;
             }
-            var data:MappingData = getMappingDataByView(viewComponent);
-            if (!data)
+            var mediator:IMediator = mediatorByView[viewComponent];
+            if (!mediator)
             {
-                return null;
-            }
-            var mediator:IMediator = data.mediatorInstance;
-            if (!mediator && data.mediatorClass)
-            {
-                injector.mapValue(data.typedViewClass, viewComponent);
-                mediator = injector.instantiate(data.mediatorClass);
-                injector.unmap(data.typedViewClass);
-                registerMediator(viewComponent, mediator);
+                var data:MappingConfig = getMappingDataByView(viewComponent);
+                if (data)
+                {
+                    injector.mapValue(data.typedViewClass, viewComponent);
+                    mediator = injector.instantiate(data.mediatorClass);
+                    injector.unmap(data.typedViewClass);
+                    registerMediator(viewComponent, mediator);
+                }
             }
             return mediator;
         }
@@ -111,9 +115,8 @@ package org.robotlegs.utilities.lasyMediator
         public function registerMediator(viewComponent:Object, mediator:IMediator):void
         {
             injector.mapValue(getClass(mediator), mediator);
-            var data:MappingData = getMappingDataByView(viewComponent);
-            data.viewInstance = viewComponent;
-            data.mediatorInstance = mediator;
+            mediatorByView[viewComponent] = mediator;
+            mappingConfigByView[viewComponent] = getMappingDataByView(viewComponent);
             mediator.setViewComponent(viewComponent);
             mediator.preRegister();
         }
@@ -124,8 +127,9 @@ package org.robotlegs.utilities.lasyMediator
         {
             if (mediator)
             {
-                var viewClass:Class = getClass(mediator.getViewComponent());
-                delete mappingDataByViewClass[viewClass];
+                var viewComponent:Object = mediator.getViewComponent();
+                delete mediatorByView[viewComponent];
+                delete mappingConfigByView[viewComponent];
                 mediator.preRemove();
                 mediator.setViewComponent(null);
                 injector.unmap(getClass(mediator));
@@ -144,16 +148,14 @@ package org.robotlegs.utilities.lasyMediator
          */
         public function retrieveMediator(viewComponent:Object):IMediator
         {
-            var data:MappingData = getMappingDataByView(viewComponent);
-            return data ? data.mediatorInstance : null;
+            return mediatorByView[viewComponent];
         }
         /**
          * @inheritDoc
          */
         public function hasMediatorForView(viewComponent:Object):Boolean
         {
-            var data:MappingData = getMappingDataByView(viewComponent);
-            return data && data.mediatorInstance;
+            return mediatorByView[viewComponent] != null;
         }
         /**
          * @inheritDoc
@@ -175,7 +177,7 @@ package org.robotlegs.utilities.lasyMediator
                 delete mediatorsMarkedForRemoval[view];
                 return;
             }
-            var data:MappingData = getMappingDataByView(view);
+            var data:MappingConfig = getMappingDataByView(view);
             if (data && data.autoCreate)
             {
                 createMediator(view);
@@ -190,7 +192,7 @@ package org.robotlegs.utilities.lasyMediator
             {
                 return;
             }
-            var data:MappingData = getMappingDataByView(view);
+            var data:MappingConfig = getMappingDataByView(view);
             if (data && data.autoRemove)
             {
                 mediatorsMarkedForRemoval[view] = view;
@@ -204,18 +206,18 @@ package org.robotlegs.utilities.lasyMediator
         //======================================================================
         //  Private methods
         //======================================================================
-        private function getMappingDataByView(view:Object):MappingData
+        protected function getMappingDataByView(view:Object):MappingConfig
         {
-            return mappingDataByViewClass[getClass(view)];
+            return mappingConfigByViewClass[getClass(view)];
         }
-        private function getClass(target:Object):Class
+        protected function getClass(target:Object):Class
         {
             return target ? target.constructor as Class : null;
         }
         //======================================================================
         //  Event handlers
         //======================================================================
-        private function removeMediatorLater(event:Event):void
+        protected function removeMediatorLater(event:Event):void
         {
             contextView.removeEventListener(Event.ENTER_FRAME, removeMediatorLater);
             for each (var view:DisplayObject in mediatorsMarkedForRemoval)
@@ -230,17 +232,10 @@ package org.robotlegs.utilities.lasyMediator
         }
     }
 }
-
-import org.robotlegs.core.IMediator;
-class MappingData
+class MappingConfig
 {
-    //-- View data --//
-    public var viewInstance:Object;
     public var typedViewClass:Class;
-    //-- Mediator data --//
     public var mediatorClass:Class;
-    public var mediatorInstance:IMediator;
-    //-- Mapping flags --//
     public var autoCreate:Boolean;
     public var autoRemove:Boolean;
 }

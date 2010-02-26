@@ -120,10 +120,10 @@ package org.robotlegs.utilities.lasyMediator
             contextView.addChild(container);
             container.addChild(mockView);
 
-            Async.handleEvent(this, contextView, Event.ENTER_FRAME, delayFurther, 500, {dispatcher: contextView, method: verifyMediatorSurvival, view: mockView, mediator: mediator});
+            Async.handleEvent(this, contextView, Event.ENTER_FRAME, delay_further, 500, {dispatcher:contextView, method:verify_mediator_survival, view:mockView, mediator: mediator});
         }
 
-        private function verifyMediatorSurvival(event:Event, data:Object):void
+        private function verify_mediator_survival(event:Event, data:Object):void
         {
             var mockView:MockView = data.view;
             var mediator:IMediator = data.mediator;
@@ -145,10 +145,10 @@ package org.robotlegs.utilities.lasyMediator
             contextView.removeChild(mockView);
             assertTrue("Mediator should exist", instance.hasMediator(mediator));
             assertTrue("View Mediator should exist", instance.hasMediatorForView(mockView));
-            Async.handleEvent(this, contextView, Event.ENTER_FRAME, delayFurther, 500, {dispatcher: contextView, method: verifyMediatorRemoval, view:mockView, mediator:mediator});
+            Async.handleEvent(this, contextView, Event.ENTER_FRAME, delay_further, 500, {dispatcher:contextView, method:verify_mediator_removal, view:mockView, mediator:mediator});
         }
 
-        private function verifyMediatorRemoval(event:Event, data:Object):void
+        private function verify_mediator_removal(event:Event, data:Object):void
         {
             var mockView:MockView = data.view;
             var mediator:IMediator = data.mediator;
@@ -183,7 +183,40 @@ package org.robotlegs.utilities.lasyMediator
             assertFalse('Mediator should NOT have been created for View Component', hasMediator);
         }
 
-        private function delayFurther(event:Event, data:Object):void
+        [Test(async)]
+        public function test_auto_remove_keep_map_data():void
+        {
+            instance.mapView(MockView, MockMediator);
+            var mockView:MockView = new MockView();
+            contextView.addChild(mockView);
+            assertTrue('Mediator should have been created for View Component', instance.hasMediatorForView(mockView));
+            contextView.removeChild(mockView);
+            Async.handleEvent(this, contextView, Event.ENTER_FRAME, delay_further, 500, {dispatcher:contextView, method:verify_mediator_removal_and_add_again, view:mockView});
+        }
+
+        private function verify_mediator_removal_and_add_again(event:Event, data:Object):void
+        {
+            var mockView:MockView = data.view;
+            assertFalse("View Mediator should not exist", instance.hasMediatorForView(mockView));
+            contextView.addChild(mockView);
+            assertTrue('Mediator should have been created for View Component again', instance.hasMediatorForView(mockView));
+        }
+
+        [Test]
+        public function different_mediators_for_different_views():void
+        {
+            instance.mapView(MockView, MockMediator);
+            var mockView1:MockView = new MockView();
+            contextView.addChild(mockView1);
+            var mockView2:MockView = new MockView();
+            contextView.addChild(mockView2);
+            //
+            assertTrue('Mediator should have been created for View 1', instance.hasMediatorForView(mockView1));
+            assertTrue('Mediator should have been created for View 2', instance.hasMediatorForView(mockView2));
+            assertTrue("Should be different mediators", instance.retrieveMediator(mockView1) != instance.retrieveMediator(mockView2));
+        }
+
+        private function delay_further(event:Event, data:Object):void
         {
             Async.handleEvent(this, data.dispatcher, Event.ENTER_FRAME, data.method, 500, data);
             delete data.dispatcher;
