@@ -13,10 +13,8 @@ bq. new LasyMediatorActivator(this);
 h3. Why it
 
 * *_LasyMediatorMap_* don't listen events of display list and check every added/removed view.
-* *_LasyMediatorMap_* only accept *_Class_* in *_mapView_* method, no *_describeType_* used.
 
 h3. How it works
 
 * *_LasyMediatorActivator_* dispatchs *_LasyMediatorEvent_* when the view is added/removed from stage.
-* *_LasyMediatorObserver_* listen to the *_LasyMediatorEvent_* from *_contextView_* then tell *_LasyMediatorMap_*.
-* *_LasyMediatorMap_* check view passed by *_LasyMediatorObserver_*.
+* *_LasyMediatorMap_* listen to the *_LasyMediatorEvent_* from *_contextView_* then check the view.

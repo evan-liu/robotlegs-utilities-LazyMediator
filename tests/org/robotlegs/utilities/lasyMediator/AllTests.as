@@ -8,6 +8,5 @@ package org.robotlegs.utilities.lasyMediator
     public class AllTests
     {
         public var lasyMediatorActivatorTest:LasyMediatorActivatorTest;
-        public var lasyMediatorMapTest:LasyMediatorMapTest;
     }
 }
