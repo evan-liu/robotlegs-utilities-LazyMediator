@@ -11,7 +11,7 @@ package
     import org.robotlegs.adapters.SwiftSuspendersReflector;
     import org.robotlegs.core.IInjector;
     import org.robotlegs.core.IMediatorMap;
-    import org.robotlegs.utilities.lasyMediator.LasyMediatorMap;
+    import org.robotlegs.utilities.lazy.LazyMediatorMap;
 
     import flash.display.DisplayObjectContainer;
     import flash.display.Sprite;
@@ -43,7 +43,7 @@ package
         private function startTest():void
         {
             var injector:IInjector = new SwiftSuspendersInjector();
-            var mediatorMap:LasyMediatorMap = new LasyMediatorMap(this, injector, new SwiftSuspendersReflector());
+            var mediatorMap:LazyMediatorMap = new LazyMediatorMap(this, injector, new SwiftSuspendersReflector());
             injector.mapValue(IEventDispatcher, this);
             injector.mapValue(DisplayObjectContainer, this);
             injector.mapValue(IMediatorMap, mediatorMap);

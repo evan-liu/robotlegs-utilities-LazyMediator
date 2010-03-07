@@ -5,7 +5,7 @@
  * in accordance with the terms of the license agreement accompanying it.
  */
 
-package org.robotlegs.utilities.lasyMediator
+package org.robotlegs.utilities.lazy
 {
 	import flash.display.DisplayObjectContainer;
 	
@@ -13,9 +13,9 @@ package org.robotlegs.utilities.lasyMediator
 	import org.robotlegs.core.IInjector;
 	import org.robotlegs.core.IReflector;
 	
-	public class LasyMediatorMap extends MediatorMap
+	public class LazyMediatorMap extends MediatorMap
 	{
-		public function LasyMediatorMap(contextView:DisplayObjectContainer, injector:IInjector, reflector:IReflector)
+		public function LazyMediatorMap(contextView:DisplayObjectContainer, injector:IInjector, reflector:IReflector)
 		{
 			super(contextView, injector, reflector);
 		}
@@ -31,8 +31,8 @@ package org.robotlegs.utilities.lasyMediator
 		{
 			if (contextView && enabled && _active)
 			{
-				contextView.addEventListener(LasyMediatorEvent.VIEW_ADDED, onViewAdded, useCapture, 0, true);
-				contextView.addEventListener(LasyMediatorEvent.VIEW_REMOVED, onViewRemoved, useCapture, 0, true);
+				contextView.addEventListener(LazyMediatorEvent.VIEW_ADDED, onViewAdded, useCapture, 0, true);
+				contextView.addEventListener(LazyMediatorEvent.VIEW_REMOVED, onViewRemoved, useCapture, 0, true);
 			}
 		}
 		
@@ -43,8 +43,8 @@ package org.robotlegs.utilities.lasyMediator
 		{
 			if (contextView && enabled && _active)
 			{
-				contextView.removeEventListener(LasyMediatorEvent.VIEW_ADDED, onViewAdded, useCapture);
-				contextView.removeEventListener(LasyMediatorEvent.VIEW_REMOVED, onViewRemoved, useCapture);
+				contextView.removeEventListener(LazyMediatorEvent.VIEW_ADDED, onViewAdded, useCapture);
+				contextView.removeEventListener(LazyMediatorEvent.VIEW_REMOVED, onViewRemoved, useCapture);
 			}
 		}
 	

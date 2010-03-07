@@ -1,21 +1,21 @@
-package org.robotlegs.utilities.lasyMediator
+package org.robotlegs.utilities.lazy
 {
     import flash.display.DisplayObject;
     import flash.events.Event;
     /**
      * @author eidiot
      */
-    public class LasyMediatorActivator
+    public class LazyMediatorActivator
     {
         //======================================================================
         //  Constructor
         //======================================================================
         /**
-         * Construct a <code>LasyMediatorActivator</code>.
+         * Construct a <code>LazyMediatorActivator</code>.
          * @param view      View target.
          * @param oneShot   If stop when the view is removed from stage.
          */
-        public function LasyMediatorActivator(view:DisplayObject, oneShot:Boolean = false)
+        public function LazyMediatorActivator(view:DisplayObject, oneShot:Boolean = false)
         {
             this.view = view;
             this.oneShot = oneShot;
@@ -38,12 +38,12 @@ package org.robotlegs.utilities.lasyMediator
         //======================================================================
         private function triggerActivateMediatorEvent():void
         {
-            view.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_ADDED, view));
+            view.dispatchEvent(new LazyMediatorEvent(LazyMediatorEvent.VIEW_ADDED, view));
             view.addEventListener(Event.REMOVED_FROM_STAGE, view_removedFromStageHandler);
         }
         private function triggerDeactivateMediatorEvent():void
         {
-            view.dispatchEvent(new LasyMediatorEvent(LasyMediatorEvent.VIEW_REMOVED, view));
+            view.dispatchEvent(new LazyMediatorEvent(LazyMediatorEvent.VIEW_REMOVED, view));
             if (!oneShot)
             {
                 view.addEventListener(Event.ADDED_TO_STAGE, view_addedToStageHandler);

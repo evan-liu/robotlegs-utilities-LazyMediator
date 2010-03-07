@@ -1,12 +1,12 @@
-package org.robotlegs.utilities.lasyMediator
+package org.robotlegs.utilities.lazy
 {
     import flash.display.DisplayObject;
     import flash.events.Event;
     /**
-     * Lasy mediator events triggered by LasyMediatorActivator and handled by LasyMediatorObserver.
+     * Lazy mediator events triggered by LazyMediatorActivator and handled by LazyMediatorObserver.
      * @author eidiot
      */
-    public class LasyMediatorEvent extends Event
+    public class LazyMediatorEvent extends Event
     {
         //======================================================================
         //  Class constants
@@ -23,11 +23,11 @@ package org.robotlegs.utilities.lasyMediator
         //  Constructor
         //======================================================================
         /**
-         * Construct a <code>LasyMediatorEvent</code>.
+         * Construct a <code>LazyMediatorEvent</code>.
          * @param type  Type of the event.
          * @param view  The view componet being added/removed.
          */
-        public function LasyMediatorEvent(type:String, view:DisplayObject)
+        public function LazyMediatorEvent(type:String, view:DisplayObject)
         {
             super(type, true);
             _view = view;
@@ -51,7 +51,7 @@ package org.robotlegs.utilities.lasyMediator
         //======================================================================
         override public function clone():Event
         {
-            return new LasyMediatorEvent(type, _view);
+            return new LazyMediatorEvent(type, _view);
         }
     }
 }

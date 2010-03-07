@@ -1,6 +1,6 @@
 package support
 {
-    import org.robotlegs.utilities.lasyMediator.LasyMediatorActivator;
+    import org.robotlegs.utilities.lazy.LazyMediatorActivator;
 
     import flash.display.Sprite;
     /**
@@ -11,7 +11,7 @@ package support
         public function MockContextView()
         {
             super();
-            new LasyMediatorActivator(this);
+            new LazyMediatorActivator(this);
         }
     }
 }

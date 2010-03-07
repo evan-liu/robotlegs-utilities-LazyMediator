@@ -1,4 +1,4 @@
-package org.robotlegs.utilities.lasyMediator
+package org.robotlegs.utilities.lazy
 {
     [Suite]
     [RunWith("org.flexunit.runners.Suite")]
@@ -7,6 +7,6 @@ package org.robotlegs.utilities.lasyMediator
      */
     public class AllTests
     {
-        public var lasyMediatorActivatorTest:LasyMediatorActivatorTest;
+        public var lazyMediatorActivatorTest:LazyMediatorActivatorTest;
     }
 }

@@ -4,7 +4,7 @@ package
 
     import org.flexunit.internals.TraceListener;
     import org.flexunit.runner.FlexUnitCore;
-    import org.robotlegs.utilities.lasyMediator.AllTests;
+    import org.robotlegs.utilities.lazy.AllTests;
 
     import flash.display.Sprite;
     /**

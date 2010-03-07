@@ -1,20 +1,20 @@
-h2. Robotlegs utility LasyMediator for better performance in games.
+h2. Robotlegs utility LazyMediator for better performance in games.
 
 h3. How to use
 
 * Override the *_mediatorMap_* getter method in *_context_* to:
 
-bq. return _mediatorMap || (_mediatorMap = new LasyMediatorMap(contextView, injector));
+bq. return __mediatorMap || (__mediatorMap = new LazyMediatorMap(contextView, injector));
 
 * In the constructor of view classes add:
 
-bq. new LasyMediatorActivator(this);
+bq. new LazyMediatorActivator(this);
 
 h3. Why it
 
-* *_LasyMediatorMap_* don't listen events of display list and check every added/removed view.
+* *_LazyMediatorMap_* don't listen events of display list and check every added/removed view.
 
 h3. How it works
 
-* *_LasyMediatorActivator_* dispatchs *_LasyMediatorEvent_* when the view is added/removed from stage.
-* *_LasyMediatorMap_* listen to the *_LasyMediatorEvent_* from *_contextView_* then check the view.
+* *_LazyMediatorActivator_* dispatchs *_LazyMediatorEvent_* when the view is added/removed from stage.
+* *_LazyMediatorMap_* listen to the *_LazyMediatorEvent_* from *_contextView_* then check the view.
