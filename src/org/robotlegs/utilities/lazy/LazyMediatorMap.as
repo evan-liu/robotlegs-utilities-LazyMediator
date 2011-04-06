@@ -29,7 +29,7 @@ package org.robotlegs.utilities.lazy
 		 */
 		override protected function addListeners():void
 		{
-			if (contextView && enabled && _active)
+			if (contextView && enabled)
 			{
 				contextView.addEventListener(LazyMediatorEvent.VIEW_ADDED, onViewAdded, useCapture, 0, true);
 				contextView.addEventListener(LazyMediatorEvent.VIEW_REMOVED, onViewRemoved, useCapture, 0, true);
@@ -41,7 +41,7 @@ package org.robotlegs.utilities.lazy
 		 */
 		override protected function removeListeners():void
 		{
-			if (contextView && enabled && _active)
+			if (contextView && enabled)
 			{
 				contextView.removeEventListener(LazyMediatorEvent.VIEW_ADDED, onViewAdded, useCapture);
 				contextView.removeEventListener(LazyMediatorEvent.VIEW_REMOVED, onViewRemoved, useCapture);

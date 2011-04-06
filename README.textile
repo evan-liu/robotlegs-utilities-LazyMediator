@@ -18,3 +18,5 @@ h3. How it works
 
 * *_LazyMediatorActivator_* dispatchs *_LazyMediatorEvent_* when the view is added/removed from stage.
 * *_LazyMediatorMap_* listen to the *_LazyMediatorEvent_* from *_contextView_* then check the view.
+
+Current version is compatible with Robotlegs v1.4.0+ because _active field (used in LazyMediatorMap) was removed there.
